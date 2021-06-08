@@ -1,0 +1,577 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package modules;
+
+import com.toedter.calendar.JTextFieldDateEditor;
+import java.awt.Color;
+import java.awt.Font;
+import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import javax.swing.JOptionPane;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import net.proteanit.sql.DbUtils;
+
+/**
+ *
+ * @author Novi
+ */
+public class Student extends javax.swing.JInternalFrame {
+
+    /** Creates new form AddStudent */
+   
+    JTextFieldDateEditor editor;
+    
+    
+    public Student() {
+        initComponents();
+        this.setBorder(null);
+        BasicInternalFrameUI bui=(BasicInternalFrameUI) this.getUI();
+        bui.setNorthPane(null);
+        
+        theader();
+        table.setDefaultEditor(Object.class, null);
+    }
+    
+    public void addStudent(String std,String std_register)
+    {
+        String dob = null;
+        String roll=txtRoll.getText();
+        String name=txtFullName.getText();
+        Date d=txtDOB.getDate();
+        DateFormat df=new SimpleDateFormat("yyyy-MM-dd");
+        dob=df.format(d);
+        String address=txtAddress.getText();
+        String email=txtEmail.getText();
+        
+        if(std.equals("--SELECT--") || name.equals("") || dob.equals("") || address.equals("") || roll.equals("") || email.equals(""))
+        {
+            JOptionPane.showMessageDialog(null, "Enter all the fields");
+        }
+        else
+        {
+            try
+            {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con= DriverManager.getConnection("jdbc:mysql://localhost:3306/Attendance","root","");
+
+                String sql="INSERT INTO "+std+"(RollNumber,Name,Class,DOB,Address,email)VALUES('"+roll+"','"+name+"','"+std+"','"+dob+"','"+address+"','"+email+"')";
+                String sql1="INSERT INTO "+std_register+"(RollNumber,Name)VALUES('"+roll+"','"+name+"')";
+                Statement st=con.createStatement();
+                st.executeUpdate(sql);
+                st.executeUpdate(sql1);
+                JOptionPane.showMessageDialog(null, "Student Added Successfully");
+                clear();
+
+                st.close();
+                con.close();
+            }
+            catch(Exception e)
+            {
+                System.out.println(e);
+            }
+        }
+
+    }
+    
+    public void clear()
+    {
+        editor.setText("");
+        txtFullName.setText("");
+        txtAddress.setText("");
+        comboClass.setSelectedIndex(0);
+ 
+    }
+    
+    public void autoID(String std)
+    {
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con= DriverManager.getConnection("jdbc:mysql://localhost:3306/Attendance","root","");
+            
+            String sql="SELECT Max(RollNumber) FROM "+std;
+            Statement st= con.createStatement();
+            
+            ResultSet rs= st.executeQuery(sql);
+            rs.next();
+            
+        
+          
+          if(rs.getString("Max(RollNumber)")==null)
+          {
+              txtRoll.setText("1");
+          }
+          else
+          {
+              int roll= Integer.parseInt(rs.getString("Max(RollNumber)"));
+              roll++;
+              txtRoll.setText(Integer.toString(roll));
+              
+          }
+            
+            
+            rs.close();
+            st.close();
+            con.close();
+     
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+    }
+    
+    public void viewStuds(String std)
+    {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");  
+            Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/Attendance","root","");
+            
+            String sql="select * from "+std;
+            PreparedStatement pst=con.prepareStatement(sql);
+            ResultSet rs=pst.executeQuery();
+            table.setModel(DbUtils.resultSetToTableModel(rs));
+            
+            rs.close();
+            pst.close();
+            con.close();
+            
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
+    public void theader()
+    {
+        JTableHeader thead=table.getTableHeader();
+        thead.setForeground(Color.red);
+        thead.setBackground(Color.ORANGE);
+        thead.setFont(new Font("Tahome",Font.BOLD,18)); 
+    }
+
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        mainPanel = new javax.swing.JPanel();
+        addStudentPanel = new javax.swing.JPanel();
+        comboClass = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtAddress = new javax.swing.JTextArea();
+        txtRoll = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        txtFullName = new javax.swing.JTextField();
+        txtDOB = new com.toedter.calendar.JDateChooser();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        txtEmail = new javax.swing.JTextField();
+        viewStudent = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        table = new javax.swing.JTable();
+        comboClass2 = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        setBackground(new java.awt.Color(255, 255, 255));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        mainPanel.setLayout(new java.awt.CardLayout());
+
+        addStudentPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3), "ADD STUDENT", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 28))); // NOI18N
+
+        comboClass.setFont(new java.awt.Font("Calibri", 1, 20)); // NOI18N
+        comboClass.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--SELECT--", "8th", "9th", "10th" }));
+        comboClass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboClassActionPerformed(evt);
+            }
+        });
+
+        txtAddress.setColumns(20);
+        txtAddress.setFont(new java.awt.Font("Calibri", 1, 19)); // NOI18N
+        txtAddress.setRows(5);
+        jScrollPane1.setViewportView(txtAddress);
+
+        txtRoll.setEditable(false);
+        txtRoll.setFont(new java.awt.Font("Calibri", 1, 21)); // NOI18N
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("ADDRESS :");
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("DATE OF BIRTH :");
+
+        txtFullName.setFont(new java.awt.Font("Calibri", 1, 21)); // NOI18N
+
+        txtDOB.setDateFormatString("yyyy-MM-dd");
+        txtDOB.setFont(new java.awt.Font("Calibri", 1, 19)); // NOI18N
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("CLASS :");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("FULL NAME :");
+
+        jButton3.setFont(new java.awt.Font("Calibri", 1, 26)); // NOI18N
+        jButton3.setText("CLEAR");
+        jButton3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jButton3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setFont(new java.awt.Font("Calibri", 1, 26)); // NOI18N
+        jButton4.setText("SUBMIT");
+        jButton4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jButton4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("ROLL NUMBER : ");
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("EMAIL :");
+
+        txtEmail.setFont(new java.awt.Font("Calibri", 1, 21)); // NOI18N
+
+        javax.swing.GroupLayout addStudentPanelLayout = new javax.swing.GroupLayout(addStudentPanel);
+        addStudentPanel.setLayout(addStudentPanelLayout);
+        addStudentPanelLayout.setHorizontalGroup(
+            addStudentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addStudentPanelLayout.createSequentialGroup()
+                .addGroup(addStudentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(addStudentPanelLayout.createSequentialGroup()
+                        .addGap(413, 413, 413)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
+                        .addComponent(comboClass, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(addStudentPanelLayout.createSequentialGroup()
+                        .addGap(353, 353, 353)
+                        .addComponent(jLabel8)
+                        .addGap(19, 19, 19)
+                        .addComponent(txtRoll, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(addStudentPanelLayout.createSequentialGroup()
+                        .addGap(383, 383, 383)
+                        .addComponent(jLabel3)
+                        .addGap(28, 28, 28)
+                        .addComponent(txtFullName, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(addStudentPanelLayout.createSequentialGroup()
+                        .addGap(343, 343, 343)
+                        .addComponent(jLabel5)
+                        .addGap(27, 27, 27)
+                        .addComponent(txtDOB, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(addStudentPanelLayout.createSequentialGroup()
+                        .addGap(393, 393, 393)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(addStudentPanelLayout.createSequentialGroup()
+                        .addGap(433, 433, 433)
+                        .addComponent(jLabel6)
+                        .addGap(32, 32, 32)
+                        .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(addStudentPanelLayout.createSequentialGroup()
+                        .addGap(471, 471, 471)
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(300, 300, 300))
+        );
+        addStudentPanelLayout.setVerticalGroup(
+            addStudentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addStudentPanelLayout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addGroup(addStudentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(comboClass, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addGroup(addStudentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtRoll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(37, 37, 37)
+                .addGroup(addStudentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtFullName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addGroup(addStudentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDOB, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(19, 19, 19)
+                .addGroup(addStudentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(addStudentPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(34, 34, 34)
+                .addGroup(addStudentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26)
+                .addGroup(addStudentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41))
+        );
+
+        editor=(JTextFieldDateEditor) txtDOB.getDateEditor();
+        editor.setEnabled(false);
+
+        mainPanel.add(addStudentPanel, "card2");
+
+        viewStudent.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 3), "VIEW STUDENTS", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Arial", 1, 28))); // NOI18N
+
+        table.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        table.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        table.setRowHeight(28);
+        jScrollPane2.setViewportView(table);
+
+        comboClass2.setFont(new java.awt.Font("Calibri", 1, 20)); // NOI18N
+        comboClass2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--SELECT--", "Eighth", "Ninth", "Tenth" }));
+        comboClass2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboClass2ActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("CLASS :");
+
+        javax.swing.GroupLayout viewStudentLayout = new javax.swing.GroupLayout(viewStudent);
+        viewStudent.setLayout(viewStudentLayout);
+        viewStudentLayout.setHorizontalGroup(
+            viewStudentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(viewStudentLayout.createSequentialGroup()
+                .addGroup(viewStudentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(viewStudentLayout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(viewStudentLayout.createSequentialGroup()
+                        .addGap(444, 444, 444)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(comboClass2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(39, Short.MAX_VALUE))
+        );
+        viewStudentLayout.setVerticalGroup(
+            viewStudentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, viewStudentLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(viewStudentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboClass2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29))
+        );
+
+        mainPanel.add(viewStudent, "card3");
+
+        getContentPane().add(mainPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 1220, 590));
+
+        jButton1.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        jButton1.setText("VIEW STUDENTS");
+        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jButton1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 30, 210, 40));
+
+        jButton2.setFont(new java.awt.Font("Dialog", 1, 20)); // NOI18N
+        jButton2.setText("ADD STUDENT");
+        jButton2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 30, 190, 40));
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        mainPanel.removeAll();
+        mainPanel.repaint();
+        mainPanel.revalidate();
+        mainPanel.add(addStudentPanel);
+        mainPanel.repaint();
+        mainPanel.revalidate();  
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        clear();
+
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        mainPanel.removeAll();
+        mainPanel.repaint();
+        mainPanel.revalidate();
+        mainPanel.add(viewStudent);
+        mainPanel.repaint();
+        mainPanel.revalidate(); 
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        String std=comboClass.getSelectedItem().toString();
+        String std_register;
+        if(std.equals("--SELECT--"))
+        {
+            JOptionPane.showMessageDialog(null, "Select the class first");
+        }
+        else if(std.equals("8th"))
+        {
+            std="Eighth";
+            std_register="eighth_attendance";
+            addStudent(std,std_register);
+        }
+        else if(std.equals("9th"))
+        {
+            std="Ninth";
+            std_register="Ninth_attendance";
+            addStudent(std,std_register);
+        }
+        else if(std.equals("10th"))
+        {
+            std="Tenth";
+            std_register="Tenth_attendance";
+            addStudent(std,std_register);
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void comboClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboClassActionPerformed
+        // TODO add your handling code here:
+        String std=comboClass.getSelectedItem().toString();
+        if(std.equals("--SELECT--"))
+        {
+            txtRoll.setText("");
+        }
+        else if(std.equals("8th"))
+        {
+            std="Eighth";
+            autoID(std);
+        }
+        else if(std.equals("9th"))
+        {
+            std="Ninth";
+            autoID(std);
+        }
+        else if(std.equals("10th"))
+        {
+            std="Tenth";
+            autoID(std);
+        }
+    }//GEN-LAST:event_comboClassActionPerformed
+
+    private void comboClass2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboClass2ActionPerformed
+        // TODO add your handling code here:
+        
+        String std=comboClass2.getSelectedItem().toString();
+        if(std.equals("--SELECT--"))
+        {
+            table.setModel(new DefaultTableModel());
+        }
+        else
+        {
+            viewStuds(std);
+            viewStudent.repaint();
+            viewStudent.revalidate();
+        }
+
+    }//GEN-LAST:event_comboClass2ActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel addStudentPanel;
+    private javax.swing.JComboBox<String> comboClass;
+    private javax.swing.JComboBox<String> comboClass2;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JPanel mainPanel;
+    private javax.swing.JTable table;
+    private javax.swing.JTextArea txtAddress;
+    private com.toedter.calendar.JDateChooser txtDOB;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtFullName;
+    private javax.swing.JTextField txtRoll;
+    private javax.swing.JPanel viewStudent;
+    // End of variables declaration//GEN-END:variables
+
+}
